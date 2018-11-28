@@ -2,6 +2,7 @@
     <string name="app_name">Top Rated Movies</string>
     <string name="sort_setting">Popular Movies</string>
     <string name="sort_setting_topRated">Top rated Movies</string>
+    <string name="sort_favorites">Favorite Movies</string>
 
     <string name="error_message">An error has occurred please check your internet connection and try again</string>
 

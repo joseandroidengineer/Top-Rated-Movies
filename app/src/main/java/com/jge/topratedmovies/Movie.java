@@ -1,7 +1,11 @@
 package com.jge.topratedmovies;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "favorite")
 public class Movie {
 
     @SerializedName("adult")
@@ -10,6 +14,7 @@ public class Movie {
     @SerializedName("backdrop_path")
     private String imagePath;
 
+    @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
     private int id;
 

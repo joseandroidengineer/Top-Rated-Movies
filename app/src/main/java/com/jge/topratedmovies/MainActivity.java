@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jge.topratedmovies.database.AppDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     private RequestQueue queue;
     private static final String POPULARITY_PATH = "popular";
     private static final String RATING_PATH = "top_rated";
+    private AppDatabase mFavoritesDatabase;
+    private Movie movie;
 
 
     @Override
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
         loadMovieData();
         mMovieAdapter.notifyDataSetChanged();
+        mFavoritesDatabase = AppDatabase.getInstance(this);
 
     }
 
@@ -140,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
             mMovieAdapter.setMovieData(null);
             volleyRequest(RATING_PATH);
 
+        } else if(id == R.id.sort_favorites){
+            Toast.makeText(this,"Favorites was tapped", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -152,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         intent.putExtra("imgUrl", movieNameIndexClicked.getPosterImagePath());
         intent.putExtra("rating",movieNameIndexClicked.getVoteAverage());
         intent.putExtra("release",movieNameIndexClicked.getReleaseDate());
+        intent.putExtra("id",movieNameIndexClicked.getId());
         startActivity(intent);
-
     }
 }
