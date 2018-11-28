@@ -2,6 +2,7 @@ package com.jge.topratedmovies;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.CompoundButton;
@@ -24,9 +25,8 @@ public class DetailsActivity extends AppCompatActivity {
     private String imgPath;
     private String title;
     private String releaseDate;
-    private String favoriteMoviePrefKey = "KEY";
+    private static String favoriteMoviePrefKey = "KEY";
     private int id;
-    private boolean isChecked;
     private AppDatabase mFavoriteMoviesDatabase;
     private SharedPreferences sharedPreferences;
 
@@ -46,6 +46,12 @@ public class DetailsActivity extends AppCompatActivity {
         onClicks();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
     private void init(){
         mFavoriteMoviesDatabase = AppDatabase.getInstance(getApplicationContext());
         mDescriptionTextView = findViewById(R.id.overview_tv);
@@ -53,6 +59,7 @@ public class DetailsActivity extends AppCompatActivity {
         mRatingBar = findViewById(R.id.ratingBar);
         mReleaseDateTV = findViewById(R.id.release_date_tv);
         mFavoriteSwitch = findViewById(R.id.switch_favorites);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     private void onClicks(){
@@ -69,11 +76,13 @@ public class DetailsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if(isChecked){
+                            sharedPreferences.edit().putBoolean(title+favoriteMoviePrefKey,isChecked).apply();
                             mFavoriteMoviesDatabase.movieDao().insertMovie(movie);
-                            Log.e("DBINSERT","MOVIE INSERTED");
+                            Log.e("DBINSERT",title+"MOVIE INSERTED");
                         }else{
+                            sharedPreferences.edit().putBoolean(title+favoriteMoviePrefKey,false).apply();
                             mFavoriteMoviesDatabase.movieDao().deleteMovie(movie);
-                            Log.e("DBDELETE", "MOVIE DELETED");
+                            Log.e("DBDELETE", title+"MOVIE DELETED");
                         }
                     }
                 });
@@ -90,5 +99,11 @@ public class DetailsActivity extends AppCompatActivity {
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher)
                 .into(mImageUrlImageView);
+        if(!sharedPreferences.getBoolean(title+favoriteMoviePrefKey,false)){
+            return;
+        }else{
+            mFavoriteSwitch.setChecked(sharedPreferences.getBoolean(title+favoriteMoviePrefKey, false));
+        }
     }
+
 }
