@@ -1,7 +1,11 @@
 package com.jge.topratedmovies;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
             volleyRequest(RATING_PATH);
 
         } else if(id == R.id.sort_favorites){
+            setUpViewModel();
             Toast.makeText(this,"Favorites was tapped", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -161,5 +166,15 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         intent.putExtra("release",movieNameIndexClicked.getReleaseDate());
         intent.putExtra("id",movieNameIndexClicked.getId());
         startActivity(intent);
+    }
+    private void setUpViewModel(){
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                Log.e("Observer TAG","Updating list of favorite movies from LiveData in ViewModel");
+                mMovieAdapter.setMovieData(movies);
+            }
+        });
     }
 }

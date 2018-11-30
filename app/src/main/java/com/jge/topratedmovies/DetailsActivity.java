@@ -25,6 +25,7 @@ public class DetailsActivity extends AppCompatActivity {
     private String imgPath;
     private String title;
     private String releaseDate;
+    private boolean isFavorite;
     private static String favoriteMoviePrefKey = "KEY";
     private int id;
     private AppDatabase mFavoriteMoviesDatabase;
@@ -69,6 +70,8 @@ public class DetailsActivity extends AppCompatActivity {
         movie.setOriginalTitle(title);
         movie.setPosterImagePath(imgPath);
         movie.setReleaseDate(releaseDate);
+        movie.setDescription(overview);
+        movie.setTitle(title);
         mFavoriteSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, final boolean isChecked) {
