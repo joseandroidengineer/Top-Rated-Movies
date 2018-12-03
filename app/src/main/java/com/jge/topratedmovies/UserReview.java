@@ -2,7 +2,7 @@ package com.jge.topratedmovies;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserReviews {
+public class UserReview {
 
 
     @SerializedName("content")

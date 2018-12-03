@@ -56,14 +56,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:text="This is a placeholder yo."/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_list_of_reviews"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerview_list_of_trailers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
             <TextView
                 android:id="@+id/user_review_label"
                 android:layout_width="wrap_content"
@@ -71,17 +63,22 @@
                 android:textSize="22sp"
                 android:text="User Reviews"
                 android:textColor="@color/colorAccent"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_list_of_reviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
             <TextView
+                android:id="@+id/trailer_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/user_reviews_tv"
-                android:textSize="16sp"
-                android:text="ANOTHER PLACEMENT YO"/>
-            <VideoView
+                android:textSize="22sp"
+                android:text="Trailers and Teasers"
+                android:textColor="@color/colorAccent"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview_list_of_trailers"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/trailer_vv"
-                />
+                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
         </LinearLayout>
     </ScrollView>
 

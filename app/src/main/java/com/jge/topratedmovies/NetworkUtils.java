@@ -22,6 +22,7 @@ public class NetworkUtils {
     private static final String VIDEO_BASE_URL = "https://www.youtube.com/";
     private static final String VIDEO_PATH = "watch";
     private static final String VIDEO_VAL = "videos";
+    private static final String REVIEW_VAL = "reviews";
 
 
     public static URL buildBaseUrl(String key, String encodedPath) {
@@ -71,6 +72,27 @@ public class NetworkUtils {
                 .appendEncodedPath(MEDIA_TYPE_PATH)
                 .appendEncodedPath(movieID +"/")
                 .appendEncodedPath(VIDEO_VAL)
+                .appendQueryParameter(API_KEY,key)
+                .build();
+
+        URL url = null;
+        try {
+            url = new URL(builtUri.toString());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        Log.e("URL", builtUri.toString());
+
+        return url;
+    }
+
+    public static URL buildBaseReviewUrl(String key, int movieID) {
+        Uri builtUri = Uri.parse(BASE_URL).buildUpon()
+                .appendEncodedPath(NUM_PARAM)
+                .appendEncodedPath(MEDIA_TYPE_PATH)
+                .appendEncodedPath(movieID +"/")
+                .appendEncodedPath(REVIEW_VAL)
                 .appendQueryParameter(API_KEY,key)
                 .build();
 

@@ -34,14 +34,16 @@ import org.json.JSONObject;
 import java.util.Arrays;
 import java.util.List;
 
-public class DetailsActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener{
+public class DetailsActivity extends AppCompatActivity implements TrailerAdapter.ListItemClickListener, UserReviewAdapter.ListItemClickListener{
     private TextView mDescriptionTextView;
     private TextView mReleaseDateTV;
     private ImageView mImageUrlImageView;
     private RatingBar mRatingBar;
     private Switch mFavoriteSwitch;
     private RecyclerView mRecyclerViewTrailers;
+    private RecyclerView mRecyclerViewReviews;
     private TrailerAdapter mTrailerAdapter;
+    private UserReviewAdapter mUserReviewAdapter;
     private JSONObject mJSONObjectResponse;
     private Gson gson;
     private RequestQueue queue;
@@ -50,8 +52,8 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
     private String imgPath;
     private String title;
     private String releaseDate;
-    private boolean isFavorite;
     private List<Trailer> trailers;
+    private List<UserReview> userReviews;
     private static String favoriteMoviePrefKey = "KEY";
     private int id;
     private AppDatabase mFavoriteMoviesDatabase;
@@ -70,6 +72,7 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         releaseDate = getIntent().getExtras().getString("release");
         id = getIntent().getExtras().getInt("id");
         volleyRequest(id);
+        volleyRequestReview(id);
         populateUI();
         onClicks();
     }
@@ -90,13 +93,24 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mTrailerAdapter = new TrailerAdapter(this);
+        mUserReviewAdapter = new UserReviewAdapter(this);
+
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
+        LinearLayoutManager llmr = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+
         mRecyclerViewTrailers = findViewById(R.id.recyclerview_list_of_trailers);
         mRecyclerViewTrailers.setLayoutManager(llm);
         mRecyclerViewTrailers.setHasFixedSize(true);
         mRecyclerViewTrailers.setAdapter(mTrailerAdapter);
+
+        mRecyclerViewReviews = findViewById(R.id.recyclerview_list_of_reviews);
+        mRecyclerViewReviews.setLayoutManager(llmr);
+        mRecyclerViewReviews.setHasFixedSize(true);
+        mRecyclerViewReviews.setAdapter(mUserReviewAdapter);
+
     }
 
     private void onClicks(){
@@ -158,6 +172,20 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
             }
         }
     }
+
+    private void gsonReviewMap(JSONArray jsonArray) {
+        if(mJSONObjectResponse == null){
+            Log.e("ERROR","gsonMAP ERROR");
+        }else{
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gson = gsonBuilder.create();
+            if (jsonArray.length() > 0) {
+                userReviews = Arrays.asList(gson.fromJson(jsonArray.toString(), UserReview[].class));
+                mUserReviewAdapter.setUserReviewData(userReviews);
+
+            }
+        }
+    }
     private void volleyRequest(int id){
         queue = Volley.newRequestQueue(getBaseContext());
         String url = String.valueOf(NetworkUtils.buildBaseVideoUrl(getString(R.string.movie_api_key), id));
@@ -183,9 +211,39 @@ public class DetailsActivity extends AppCompatActivity implements TrailerAdapter
         queue.add(jsonObjectRequest);
     }
 
+    private void volleyRequestReview(int id){
+        queue = Volley.newRequestQueue(getBaseContext());
+        String url = String.valueOf(NetworkUtils.buildBaseReviewUrl(getString(R.string.movie_api_key), id));
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        mJSONObjectResponse = response;
+                        try {
+                            gsonReviewMap(response.getJSONArray("results"));
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        Log.e("VOLLEY", volleyError.toString());
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+
     @Override
     public void onListItemClick(Trailer trailerNameIndexClicked) {
         Intent videoIntent = new Intent(Intent.ACTION_VIEW, NetworkUtils.buildVideoUrl(trailerNameIndexClicked.getKey()));
         this.startActivity(videoIntent);
+    }
+
+    @Override
+    public void onListItemClick(UserReview userReviewNameIndexClicked) {
+
     }
 }
