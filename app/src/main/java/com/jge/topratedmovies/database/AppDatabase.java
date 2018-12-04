@@ -7,7 +7,7 @@ import android.content.Context;
 
 import android.util.Log;
 
-import com.jge.topratedmovies.Movie;
+import com.jge.topratedmovies.Models.Movie;
 
 @Database(entities = {Movie.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase{

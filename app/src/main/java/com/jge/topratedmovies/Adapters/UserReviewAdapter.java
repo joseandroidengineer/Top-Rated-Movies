@@ -1,4 +1,4 @@
-package com.jge.topratedmovies;
+package com.jge.topratedmovies.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.jge.topratedmovies.Models.UserReview;
+import com.jge.topratedmovies.R;
 
 import java.util.List;
 

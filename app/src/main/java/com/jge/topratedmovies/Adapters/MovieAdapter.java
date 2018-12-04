@@ -1,4 +1,4 @@
-package com.jge.topratedmovies;
+package com.jge.topratedmovies.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,8 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jge.topratedmovies.Models.Movie;
+import com.jge.topratedmovies.NetworkUtils;
+import com.jge.topratedmovies.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder>{
@@ -76,7 +80,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         return movies.size();
     }
 
-    public void setMovieData(List<Movie> movieData){
+    public void setMovieData(ArrayList<Movie> movieData){
         movies = movieData;
         notifyDataSetChanged();
     }

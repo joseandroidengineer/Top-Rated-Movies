@@ -1,12 +1,14 @@
-package com.jge.topratedmovies;
+package com.jge.topratedmovies.Models;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "favorite")
-public class Movie {
+public class Movie implements Parcelable {
 
     @SerializedName("adult")
     private boolean adult;
@@ -141,8 +143,34 @@ public class Movie {
     @SerializedName("popularity")
     private float popularity;
 
+    public static final Parcelable.Creator<Movie> CREATOR
+            = new Parcelable.Creator<Movie>() {
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+
+    /** recreate object from parcel */
+    private Movie(Parcel in) {
+
+    }
+
 
     public Movie(){
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
 
     }
 }

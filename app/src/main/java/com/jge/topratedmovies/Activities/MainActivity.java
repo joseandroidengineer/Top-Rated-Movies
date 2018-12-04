@@ -1,7 +1,6 @@
-package com.jge.topratedmovies;
+package com.jge.topratedmovies.Activities;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,12 +25,19 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jge.topratedmovies.Activities.DetailsActivity;
+import com.jge.topratedmovies.Adapters.MovieAdapter;
+import com.jge.topratedmovies.MainViewModel;
+import com.jge.topratedmovies.Models.Movie;
+import com.jge.topratedmovies.NetworkUtils;
+import com.jge.topratedmovies.R;
 import com.jge.topratedmovies.database.AppDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,12 +49,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
     private JSONObject mJSONObjectResponse;
     private String error;
     private Gson gson;
-    private List<Movie> movies;
+    private ArrayList<Movie> moviesArrayList;
     private RequestQueue queue;
     private static final String POPULARITY_PATH = "popular";
     private static final String RATING_PATH = "top_rated";
     private AppDatabase mFavoritesDatabase;
-    private Movie movie;
+
+    private int id;
 
 
     @Override
@@ -59,19 +66,23 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         mRecyclerView = findViewById(R.id.recyclerview_list_of_movies);
         mErrorMessageDisplay = findViewById(R.id.tv_error_message_display);
         mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
-        mLoadingIndicator.setVisibility(View.VISIBLE);
-
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mRecyclerView.setHasFixedSize(true);
         mMovieAdapter = new MovieAdapter(this);
         mRecyclerView.setAdapter(mMovieAdapter);
-        volleyRequest(POPULARITY_PATH);
+        if(savedInstanceState != null){
+            moviesArrayList = savedInstanceState.getParcelableArrayList("moviesArrayList");
+            mMovieAdapter.setMovieData(moviesArrayList);
+            loadMovieData();
+            mMovieAdapter.notifyDataSetChanged();
+        } else{
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+            volleyRequest(POPULARITY_PATH);
+            loadMovieData();
+        }
 
-
-        loadMovieData();
         mMovieAdapter.notifyDataSetChanged();
         mFavoritesDatabase = AppDatabase.getInstance(this);
-
     }
 
     private void loadMovieData() {
@@ -95,8 +106,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
             GsonBuilder gsonBuilder = new GsonBuilder();
             gson = gsonBuilder.create();
             if (jsonArray.length() > 0) {
-                movies = Arrays.asList(gson.fromJson(jsonArray.toString(), Movie[].class));
-                mMovieAdapter.setMovieData(movies);
+                moviesArrayList = new ArrayList<>(Arrays.asList(gson.fromJson(jsonArray.toString(), Movie[].class)));
+                mMovieAdapter.setMovieData(moviesArrayList);
 
             }
         }
@@ -139,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        id = item.getItemId();
         if(id == R.id.sort_popular){
             mLoadingIndicator.setVisibility(View.VISIBLE);
             mMovieAdapter.setMovieData(null);
@@ -172,9 +183,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.List
         viewModel.getMovies().observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                Log.e("Observer TAG","Updating list of favorite movies from LiveData in ViewModel");
-                mMovieAdapter.setMovieData(movies);
+                Log.e("Observer TAG","Updating list of favorite moviesArrayList from LiveData in ViewModel");
+                moviesArrayList = new ArrayList<>(movies);
+                mMovieAdapter.setMovieData(moviesArrayList);
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("moviesArrayList", moviesArrayList);
     }
 }

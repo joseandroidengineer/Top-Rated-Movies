@@ -1,15 +1,13 @@
-package com.jge.topratedmovies;
+package com.jge.topratedmovies.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -24,6 +22,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jge.topratedmovies.Adapters.TrailerAdapter;
+import com.jge.topratedmovies.Adapters.UserReviewAdapter;
+import com.jge.topratedmovies.AppExecutors;
+import com.jge.topratedmovies.Models.Movie;
+import com.jge.topratedmovies.Models.Trailer;
+import com.jge.topratedmovies.Models.UserReview;
+import com.jge.topratedmovies.NetworkUtils;
+import com.jge.topratedmovies.R;
 import com.jge.topratedmovies.database.AppDatabase;
 import com.squareup.picasso.Picasso;
 

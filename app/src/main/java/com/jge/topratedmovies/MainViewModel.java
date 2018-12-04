@@ -3,9 +3,9 @@ package com.jge.topratedmovies;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.jge.topratedmovies.Models.Movie;
 import com.jge.topratedmovies.database.AppDatabase;
 
 import java.util.List;

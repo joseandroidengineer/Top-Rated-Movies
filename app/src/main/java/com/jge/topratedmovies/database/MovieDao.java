@@ -8,7 +8,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.jge.topratedmovies.Movie;
+import com.jge.topratedmovies.Models.Movie;
 
 import java.util.List;
 
